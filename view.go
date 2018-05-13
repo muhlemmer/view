@@ -33,7 +33,7 @@ type Common struct {
 //C declares Common with default values
 var C = Common{
 	Base: "templates/", //Default directory
-	Ext:  ".html",      //Default extention
+	Ext:  ".html",      //Default extension
 }
 
 //SetTemplates sets the common templates. The common templates will be cached and available in every new view.
