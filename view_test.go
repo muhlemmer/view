@@ -24,9 +24,9 @@ var templateSets = [][]string{
 //TestSetTemplates tests the setting and parsing of the common templates.
 //The last template set will remain the Common.templates for the remainder of the tests.
 func TestSetTemplates(test *testing.T) {
-	Common.Base = "test/"
+	C.Base = "test/"
 	for _, ts := range templateSets {
-		if err := Common.SetTemplates(ts...); err != nil {
+		if err := C.SetTemplates(ts...); err != nil {
 			test.Error(
 				"For: ", ts, "; ",
 				err.Error(),
@@ -34,7 +34,7 @@ func TestSetTemplates(test *testing.T) {
 			continue
 		}
 		for _, t := range ts {
-			if Common.templates.Lookup(t) == nil {
+			if C.templates.Lookup(t) == nil {
 				test.Error(
 					"For: ", ts,
 					"; Expected: ", t,
@@ -50,7 +50,7 @@ var testView *View
 var testWriter bytes.Buffer
 
 func TestNew(test *testing.T) {
-	if Common.templates == nil {
+	if C.templates == nil {
 		test.Error("Common.templates not set")
 		return
 	}

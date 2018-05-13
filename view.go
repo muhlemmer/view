@@ -4,7 +4,7 @@
 
 // Package view manages template loading and caching. Data inclusion to the template and execution.
 // It features common settings of template name prefix and suffix (defaults to templates/ and .html).
-// It holds a set of Coomon templates, which are automatically included in every new View.
+// It holds a set of Common templates, which are automatically included in every new View.
 package view
 
 import (
@@ -16,29 +16,30 @@ import (
 //It returns error if len(tn) == 0 or in case Template.ParseFiles fails.
 func parse(to *template.Template, tn ...string) (err error) {
 	for _, v := range tn {
-		if to, err = to.ParseFiles(Common.Base + v + Common.Ext); err != nil {
+		if to, err = to.ParseFiles(C.Base + v + C.Ext); err != nil {
 			return
 		}
 	}
 	return
 }
 
-type common struct {
+//Common keeps the common templates and common tempate data
+type Common struct {
 	Base      string //Basename, ussualy the directory where the templates reside
 	Ext       string //Extention for the template file
 	templates *template.Template
 }
 
-//Common keept the common templates and common tempate data
-var Common = common{
-	Base: "templates/", //Directory templates is default
-	Ext:  ".html",      //.html is the default extention
+//C declares Common with default values
+var C = Common{
+	Base: "templates/", //Default directory
+	Ext:  ".html",      //Default extention
 }
 
 //SetTemplates sets the common templates. The common templates will be cached and available in every new view.
 //This method creates a new template object and all previous addes templates are lost.
 //It returns an error if one of the templates fail to parse. In this case, if there was a previous template set they will remain un-affected.
-func (c *common) SetTemplates(tn ...string) (err error) {
+func (c *Common) SetTemplates(tn ...string) (err error) {
 	t := template.New("")
 	if err = parse(t, tn...); err != nil {
 		return
@@ -47,7 +48,7 @@ func (c *common) SetTemplates(tn ...string) (err error) {
 	return
 }
 
-//View holds the template and the output writer.
+//View holds the templates and the output writer.
 type View struct {
 	t *template.Template
 	w io.Writer
@@ -57,7 +58,7 @@ type View struct {
 //It needs 0 or more template names that need to be loaded for this view. Templates may be loaded from cache.
 //This template set will be merged with the common template set.
 func New(w io.Writer, tn ...string) (v *View, err error) {
-	t, _ := Common.templates.Clone() //Clone never returns error
+	t, _ := C.templates.Clone() //Clone never returns error
 	if len(tn) > 0 {
 		if err = parse(t, tn...); err != nil {
 			return
